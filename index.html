@@ -1,107 +1,156 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Gameora</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<style>
-* {
-  box-sizing: border-box;
-}
+  <title>Gameora</title>
 
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background: #0f1020;
-  color: white;
-  text-align: center;
-}
+  <style>
+    * {
+      box-sizing: border-box;
+    }
 
-.header {
-  padding: 35px 20px 20px;
-}
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #080a18;
+      color: white;
+      text-align: center;
+    }
 
-.logo {
-  font-size: 48px;
-  margin-bottom: 8px;
-}
+    .header {
+      padding: 35px 20px 20px;
+    }
 
-h1 {
-  margin: 0;
-  font-size: 34px;
-}
+    .logo {
+      font-size: 48px;
+      margin-bottom: 8px;
+    }
 
-.tagline {
-  color: #aaa;
-  margin-top: 8px;
-}
+    h1 {
+      margin: 0;
+      font-size: 34px;
+      letter-spacing: 2px;
+    }
 
-.games {
-  padding: 20px;
-}
+    .tagline {
+      color: #aaa;
+      margin-top: 8px;
+      font-size: 15px;
+    }
 
-.game-card {
-  background: #1c1d32;
-  border-radius: 18px;
-  padding: 22px;
-  margin: 15px 0;
-  border: 1px solid #30324d;
-}
+    .games {
+      padding: 20px;
+      max-width: 500px;
+      margin: auto;
+    }
 
-.game-icon {
-  font-size: 50px;
-}
+    .game-card {
+      background: #161c32;
+      border-radius: 18px;
+      padding: 22px;
+      margin: 15px 0;
+      border: 1px solid #303a64;
+    }
 
-.game-card h2 {
-  margin: 10px 0;
-}
+    .game-icon {
+      font-size: 50px;
+      margin-bottom: 10px;
+    }
 
-.game-card p {
-  color: #bbb;
-}
+    .game-card h2 {
+      margin: 10px 0;
+    }
 
-.play-btn {
-  border: none;
-  border-radius: 12px;
-  padding: 12px 30px;
-  font-size: 16px;
-  font-weight: bold;
-  background: #6c5ce7;
-  color: white;
-}
+    .game-card p {
+      color: #bbb;
+    }
 
-.coming {
-  opacity: 0.7;
-}
-</style>
+    .play-btn {
+      display: inline-block;
+      border: none;
+      border-radius: 12px;
+      padding: 13px 30px;
+      font-size: 16px;
+      font-weight: bold;
+      background: #6c5ce7;
+      color: white;
+      text-decoration: none;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    .play-btn:hover {
+      opacity: 0.9;
+    }
+
+    .coming {
+      opacity: 0.7;
+    }
+
+    .footer {
+      color: #777;
+      font-size: 12px;
+      margin: 30px 0;
+    }
+  </style>
 </head>
 
 <body>
 
-<div class="header">
-  <div class="logo">🎮</div>
-  <h1>GAMEORA</h1>
-  <p class="tagline">Play. Compete. Enjoy.</p>
-</div>
+  <div class="header">
+    <div class="logo">🎮</div>
 
-<div class="games">
+    <h1>GAMEORA</h1>
 
-  <div class="game-card">
-    <div class="game-icon">🎲</div>
-    <h2>Ludo</h2>
-    <p>Play Ludo with friends.</p>
-    <button class="play-btn">PLAY</button>
+    <p class="tagline">
+      Play. Compete. Enjoy.
+    </p>
   </div>
 
-  <div class="game-card coming">
-    <div class="game-icon">🧩</div>
-    <h2>Teen Patti</h2>
-    <p>Coming Soon</p>
-    <button class="play-btn">SOON</button>
+  <div class="games">
+
+    <!-- LUDO -->
+    <div class="game-card">
+
+      <div class="game-icon">🎲</div>
+
+      <h2>Ludo</h2>
+
+      <p>
+        Play Ludo with friends and enter the Dragon Realm.
+      </p>
+
+      <a href="ludo.html" class="play-btn">
+        PLAY LUDO
+      </a>
+
+    </div>
+
+
+    <!-- TEEN PATTI -->
+    <div class="game-card coming">
+
+      <div class="game-icon">🃏</div>
+
+      <h2>Teen Patti</h2>
+
+      <p>
+        Coming Soon
+      </p>
+
+      <button class="play-btn" disabled>
+        SOON
+      </button>
+
+    </div>
+
   </div>
 
-</div>
+  <div class="footer">
+    Gameora © 2026
+  </div>
 
 </body>
 </html>
