@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Gameora — Dragon Realm</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#080a18;color:#fff;font-family:Arial,sans-serif}
+.app{max-width:560px;margin:auto;min-height:100vh;background:radial-gradient(circle at 50% 5%,#293b73 0,#10152c 28%,#080a18 62%)}
+header{padding:18px 16px 10px;text-align:center}
+.logo{font-size:34px;font-weight:900;letter-spacing:2px;text-shadow:0 0 18px #8da5ff}
+.sub{color:#b8bdd5;margin-top:3px}.stats{display:flex;justify-content:space-between;margin:12px 14px;padding:10px 14px;background:#11152a;border:1px solid #3b4268;border-radius:14px}
+.stat b{display:block;font-size:18px}.stat span{font-size:11px;color:#9da4c5}
+.panel{margin:12px 14px;padding:14px;background:#11152a;border:1px solid #343b61;border-radius:18px;box-shadow:0 12px 35px #0006}
+.topline{display:flex;justify-content:space-between;align-items:center}.turn{font-weight:800}.hint{font-size:11px;color:#aab1d0;margin-top:4px}
+.board{width:min(94vw,500px);aspect-ratio:1;margin:14px auto;display:grid;grid-template-columns:repeat(15,1fr);grid-template-rows:repeat(15,1fr);background:#e9edf8;border:5px solid #171a32;border-radius:16px;overflow:hidden;box-shadow:0 0 28px #0008}
+.cell{border:1px solid #b9bfd0;display:flex;align-items:center;justify-content:center;position:relative}
+.homeR{background:#d94758}.homeG{background:#24a765}.homeY{background:#e5ad25}.homeB{background:#397fe0}.path{background:#f7f8fb}.center{background:linear-gradient(135deg,#d94758 0 25%,#e5ad25 25% 50%,#24a765 50% 75%,#397fe0 75%)}
+.token{width:72%;height:72%;border-radius:50%;border:2px solid #fff;box-shadow:0 3px 7px #0008;z-index:2}.r{background:#e63e51}.g{background:#17a85a}.y{background:#d9a20d}.b{background:#347be4}
+.movable{animation:pulse .8s infinite;cursor:pointer;outline:3px solid #fff8}@keyframes pulse{50%{transform:scale(1.16)}}
+.controls{display:flex;justify-content:center;align-items:center;gap:10px}.dice{width:68px;height:68px;border-radius:16px;background:#f5f6ff;color:#111;font-size:42px;display:flex;align-items:center;justify-content:center;box-shadow:0 5px 15px #0008}
+button{border:0;border-radius:12px;padding:13px 18px;font-size:15px;font-weight:800;color:#fff;background:#6957e8;cursor:pointer}button:disabled{opacity:.45}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}.card{background:#171c38;border:1px solid #424a78;border-radius:12px;padding:11px;text-align:center;font-size:12px;cursor:pointer}.card b{display:block;font-size:20px;margin-bottom:5px}.card.used{opacity:.35}
+.players{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:12px}.player{padding:9px;background:#0c1023;border:1px solid #30365a;border-radius:10px;font-size:12px}.active{outline:2px solid #fff}
+.note{color:#8991b4;font-size:10px;text-align:center;line-height:1.4;margin-top:10px}
+</style>
+</head>
+<body>
+<div class="app">
+<header><div class="logo">🐉 GAMEORA</div><div class="sub">DRAGON REALM • PLAY • FIGHT • WIN</div></header>
+<div class="stats">
+ <div class="stat">💎 <b id="gems">100</b><span>GEMS</span></div>
+ <div class="stat">🏆 <b id="score">0</b><span>SCORE</span></div>
+ <div class="stat">🔥 <b id="streak">0</b><span>STREAK</span></div>
+</div>
+<div class="panel">
+ <div class="topline"><div><div id="turn" class="turn">Red Dragon's turn</div><div class="hint">Roll 6 to enter • Roll again after 6</div></div><button id="new">NEW GAME</button></div>
+ <div id="board" class="board"></div>
+ <div class="controls"><div id="dice" class="dice">⚀</div><button id="roll">ROLL DICE</button></div>
+ <div class="cards">
+  <div class="card" id="shield"><b>🛡️</b>Shield</div>
+  <div class="card" id="teleport"><b>🌀</b>Teleport</div>
+  <div class="card" id="attack"><b>⚔️</b>Attack</div>
+ </div>
+ <div id="players" class="players"></div>
+ <div class="note">Demo mode uses virtual Gems only. No cash wagering or cash-out is enabled.</div>
+</div>
+</div>
+<script>
+const C=[{name:"Red Dragon",c:"r",home:"homeR"},{name:"Green Dragon",c:"g",home:"homeG"},{name:"Golden Dragon",c:"y",home:"homeY"},{name:"Blue Dragon",c:"b",home:"homeB"}];
+const face=["⚀","⚁","⚂","⚃","⚄","⚅"];
+const track=[[6,1],[6,2],[6,3],[6,4],[6,5],[5,6],[4,6],[3,6],[2,6],[1,6],[0,6],[0,7],[0,8],[1,8],[2,8],[3,8],[4,8],[5,8],[6,9],[6,10],[6,11],[6,12],[6,13],[6,14],[7,14],[8,14],[8,13],[8,12],[8,11],[8,10],[8,9],[9,8],[10,8],[11,8],[12,8],[13,8],[14,8],[14,7],[14,6],[13,6],[12,6],[11,6],[10,6],[9,6],[8,5],[8,4],[8,3],[8,2],[8,1],[8,0],[7,0],[6,0]];
+const start=[0,13,26,39], homes=[[[1,1],[1,4],[4,1],[4,4]],[[1,10],[1,13],[4,10],[4,13]],[[10,10],[10,13],[13,10],[13,13]],[[10,1],[10,4],[13,1],[13,4]]];
+const safe=new Set(start);
+let p=C.map(()=>[-1,-1,-1,-1]),turn=0,d=0,rolled=false,winner=-1,gems=100,score=0,streak=0,cards={shield:1,teleport:1,attack:1};
+
+function build(){const b=document.getElementById("board");b.innerHTML="";for(let r=0;r<15;r++)for(let c=0;c<15;c++){let e=document.createElement("div");e.className="cell";if(r<6&&c<6)e.classList.add("homeR");else if(r<6&&c>8)e.classList.add("homeG");else if(r>8&&c>8)e.classList.add("homeY");else if(r>8&&c<6)e.classList.add("homeB");else if(r>=6&&r<=8&&c>=6&&c<=8)e.classList.add("center");else e.classList.add("path");e.id=`x${r}-${c}`;b.appendChild(e)}render()}
+function pos(pi,ti){let q=p[pi][ti];if(q<0)return homes[pi][ti];if(q<=51)return track[(start[pi]+q)%52];return null}
+function can(pi,ti){let q=p[pi][ti];return d&&(q<0?d===6:q+d<=56)}
+function render(){document.querySelectorAll(".token").forEach(e=>e.remove());C.forEach((x,pi)=>p[pi].forEach((q,ti)=>{let z=pos(pi,ti);if(!z)return;let e=document.createElement("div");e.className=`token ${x.c}`;if(rolled&&pi===turn&&can(pi,ti))e.classList.add("movable");e.onclick=()=>move(pi,ti);document.getElementById(`x${z[0]}-${z[1]}`).appendChild(e)}));document.getElementById("turn").textContent=winner>=0?`${C[winner].name} WINS! 🏆`:`${C[turn].name}'s turn`;document.getElementById("gems").textContent=gems;document.getElementById("score").textContent=score;document.getElementById("streak").textContent=streak;document.getElementById("roll").disabled=rolled||winner>=0;document.getElementById("players").innerHTML=C.map((x,i)=>`<div class="player ${i===turn&&winner<0?"active":""}"><b>${x.name}</b><br>Home: ${p[i].filter(q=>q<0).length} • Finish: ${p[i].filter(q=>q===56).length}/4</div>`).join("")}
+function roll(){if(rolled||winner>=0)return;d=1+Math.floor(Math.random()*6);document.getElementById("dice").textContent=face[d-1];rolled=true;if(!p[turn].some((_,i)=>can(turn,i))){setTimeout(()=>{rolled=false;d=0;turn=(turn+1)%4;render()},600)}else render()}
+function move(pi,ti){if(pi!==turn||!rolled||!can(pi,ti))return;let q=p[pi][ti];q=q<0?0:q+d;p[pi][ti]=q;if(q<=51&&!safe.has((start[pi]+q)%52)){let spot=(start[pi]+q)%52;C.forEach((_,op)=>{if(op!==pi)p[op]=p[op].map(v=>v>=0&&v<=51&&(start[op]+v)%52===spot?-1:v)})}score+=d*10;gems+=d===6?3:1;if(p[pi].every(v=>v===56)){winner=pi;score+=500;gems+=100;streak++}let six=d===6;rolled=false;d=0;if(winner<0&&!six)turn=(turn+1)%4;render()}
+function reset(){p=C.map(()=>[-1,-1,-1,-1]);turn=0;d=0;rolled=false;winner=-1;gems=100;score=0;streak=0;build()}
+document.getElementById("roll").onclick=roll;document.getElementById("new").onclick=reset;
+["shield","teleport","attack"].forEach(id=>document.getElementById(id).onclick=()=>alert(`${id[0].toUpperCase()+id.slice(1)} power card is reserved for the next multiplayer battle mode.`));
+build();
+</script>
+</body>
+</html>
